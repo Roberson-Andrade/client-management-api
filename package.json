@@ -1,0 +1,24 @@
+{
+  "name": "client-management-api",
+  "version": "1.0.0",
+  "description": "An app to manage your clients.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "mongodb": "/Users/rober/mongodb/bin/mongod --dbpath=/Users/rober/mongodb-data"
+  },
+  "author": "Roberson Andrade",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2",
+    "mongodb": "^4.3.1",
+    "mongoose": "^6.1.8"
+  },
+  "devDependencies": {
+    "env-cmd": "^10.1.0",
+    "jest": "^27.4.7",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.2.2"
+  }
+}

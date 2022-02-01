@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "env-cmd": "^10.1.0",
+    "eslint": "^8.8.0",
     "jest": "^27.4.7",
     "nodemon": "^2.0.15",
     "supertest": "^6.2.2"

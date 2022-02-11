@@ -1,20 +1,25 @@
 const { DataTypes, Model } = require('sequelize');
-const sequelize = require('../database/index');
 
-class Client extends Model {}
+class Client extends Model {
+  static init(sequelize) {
+    super.init({
+      full_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      client_email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    }, {
+      sequelize,
+      modelName: 'clients',
+    });
+  }
 
-Client.init({
-  full_name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  client_email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-}, {
-  sequelize,
-  modelName: 'Client',
-});
+  static associate(models) {
+    this.hasMany(models.projects, { foreignKey: 'user_id', as: 'owner' });
+  }
+}
 
 module.exports = Client;

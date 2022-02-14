@@ -10,5 +10,6 @@ Client.init(connection);
 Project.init(connection);
 
 Client.associate(connection.models);
+Project.associate(connection.models);
 
 module.exports = connection;

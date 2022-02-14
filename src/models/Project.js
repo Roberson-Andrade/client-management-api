@@ -26,6 +26,10 @@ class Project extends Model {
       updatedAt: false,
     });
   }
+
+  static associate(models) {
+    this.belongsTo(models.clients, { foreignKey: 'client_id' });
+  }
 }
 
 module.exports = Project;

@@ -4,10 +4,10 @@ const Client = require('../models/Client');
 module.exports = {
   async createProject(req, res) {
     try {
-      const { user_id } = req.params;
+      const { client_id } = req.params;
       const { title, description, value, deadline } = req.body;
       const project = await Project.create({
-        user_id,
+        client_id,
         title,
         description,
         value,
@@ -24,14 +24,14 @@ module.exports = {
 
   async getAllProjects(req, res) {
     try {
-      const { user_id } = req.params;
-      const client = await Client.findByPk(user_id);
+      const { client_id } = req.params;
+      const client = await Client.findByPk(client_id);
 
       if (!client) {
         return res.status(404).send({ error: 'The client doesn\'t exist.' });
       }
 
-      const projects = await Project.findAll({ where: { user_id } });
+      const projects = await Project.findAll({ where: { client_id } });
 
       res.send(projects);
     }

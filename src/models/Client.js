@@ -18,7 +18,7 @@ class Client extends Model {
   }
 
   static associate(models) {
-    this.hasMany(models.projects, { foreignKey: 'user_id', as: 'owner' });
+    this.hasMany(models.projects, { foreignKey: 'client_id', as: 'owner' });
   }
 }
 

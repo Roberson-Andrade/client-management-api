@@ -9,7 +9,7 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
-      user_id: {
+      client_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'clients', key: 'id' },

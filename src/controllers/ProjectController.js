@@ -42,10 +42,10 @@ module.exports = {
 
   async updateProject(req, res) {
     try {
-      const { project_id } = req.params;
+      const { client_id, project_id } = req.params;
 
       const project = await Project.update(req.body, {
-        where: { id: project_id },
+        where: { id: project_id, client_id },
       });
 
       if (!project[0]) {
@@ -61,9 +61,9 @@ module.exports = {
 
   async deleteProject(req, res) {
     try {
-      const { project_id } = req.params;
+      const { client_id, project_id } = req.params;
 
-      const project = await Project.destroy({ where: { id: project_id } });
+      const project = await Project.destroy({ where: { id: project_id, client_id } });
 
       res.json(project);
     }

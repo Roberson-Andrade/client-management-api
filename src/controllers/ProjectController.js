@@ -49,7 +49,7 @@ module.exports = {
       });
 
       if (!project[0]) {
-        return res.status(404).send({ error: 'The project doesn\'t exist.' });
+        return res.status(404).send({ error: 'Project not found!' });
       }
 
       res.json(project);

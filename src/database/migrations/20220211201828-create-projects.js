@@ -24,7 +24,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       value: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DECIMAL(9, 2),
       },
       deadline: {
         type: Sequelize.DATE,

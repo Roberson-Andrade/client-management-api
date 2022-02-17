@@ -16,4 +16,27 @@ module.exports = {
       res.status(500).send(error);
     }
   },
+
+  async updateUser(req, res) {
+    try {
+      const { user_id } = req.params;
+      const user = await User.update(req.body, { where: { id: user_id } });
+      res.send(user);
+    }
+    catch (error) {
+      res.status(500).send(error);
+    }
+  },
+
+  async deleteUser(req, res) {
+    try {
+      const { user_id } = req.params;
+      const user = await User.destroy({ where: { id: user_id } });
+
+      res.status(200).json(user);
+    }
+    catch (error) {
+      res.status(500).send(error);
+    }
+  },
 };

@@ -17,6 +17,28 @@ module.exports = {
     }
   },
 
+  async loginUser(req, res) {
+    try {
+      const { user_email, user_password } = req.body;
+      const user = await User.findOne({ where: { user_email } });
+
+      if (!user) {
+        return res.status(400).send({ error: 'Email or password is invalid' });
+      }
+
+      const isPasswordValid = await User.validatePassword(user_password, user.user_password);
+
+      if (!isPasswordValid) {
+        return res.status(400).send({ error: 'Email or password is invalid' });
+      }
+
+      res.send(user);
+    }
+    catch (error) {
+      res.status(500).send(error);
+    }
+  },
+
   async updateUser(req, res) {
     try {
       const { user_id } = req.params;

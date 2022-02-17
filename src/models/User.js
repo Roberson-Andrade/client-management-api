@@ -1,4 +1,5 @@
 const { DataTypes, Model } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 class User extends Model {
   static init(sequelize) {
@@ -23,11 +24,21 @@ class User extends Model {
     }, {
       sequelize,
       modelName: 'users',
+      hooks: {
+        async beforeCreate(user) {
+          const hashedPassword = await bcrypt.hash(user.user_password, 8);
+          user.user_password = hashedPassword;
+        },
+      },
     });
   }
 
   static associate(models) {
     this.hasMany(models.clients, { foreignKey: 'user_id', as: 'clients' });
+  }
+
+  static async validatePassword(plainTextPassword, hashedPassword) {
+    return await bcrypt.compare(plainTextPassword, hashedPassword);
   }
 }
 

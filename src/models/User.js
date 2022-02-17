@@ -1,5 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
+const Token = require('../models/Token');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 class User extends Model {
   static init(sequelize) {
@@ -35,10 +37,17 @@ class User extends Model {
 
   static associate(models) {
     this.hasMany(models.clients, { foreignKey: 'user_id', as: 'clients' });
+    this.hasMany(models.tokens, { foreignKey: 'user_id', as: 'tokens' });
   }
 
   static async validatePassword(plainTextPassword, hashedPassword) {
     return await bcrypt.compare(plainTextPassword, hashedPassword);
+  }
+
+  async generateToken() {
+    const token = jwt.sign({ id: this.dataValues.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    await Token.create({ user_id: this.dataValues.id, token });
   }
 }
 

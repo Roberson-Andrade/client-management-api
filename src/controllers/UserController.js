@@ -32,6 +32,7 @@ module.exports = {
         return res.status(400).send({ error: 'Email or password is invalid' });
       }
 
+      user.generateToken();
       res.send(user);
     }
     catch (error) {

@@ -4,8 +4,9 @@ module.exports = {
   async createClient(req, res) {
     try {
       const { full_name, client_email } = req.body;
+      const { id: user_id } = req.user;
 
-      const client = await Client.create({ full_name, client_email });
+      const client = await Client.create({ full_name, client_email, user_id });
 
       res.status(201).json(client);
     }
@@ -16,7 +17,13 @@ module.exports = {
 
   async getAllClients(req, res) {
     try {
-      const allClients = await Client.findAll();
+      const { id: user_id } = req.user;
+      const allClients = await Client.findAll({ where: { user_id } });
+
+      if (allClients.length === 0) {
+        res.status(404).send({ error: 'No clients found! ' });
+      }
+
       res.status(200).send(allClients);
     }
     catch (error) {
@@ -27,11 +34,11 @@ module.exports = {
   async updateClient(req, res) {
     try {
       const { client_id } = req.params;
-
-      const client = await Client.update(req.body, { where: { id: client_id } });
+      const { id: user_id } = req.user;
+      const client = await Client.update(req.body, { where: { id: client_id, user_id } });
 
       if (!client[0]) {
-        return res.status(404).send({ error: 'Client not found! ' });
+        return res.status(404).send({ error: 'Client not found!' });
       }
 
       res.json(client);
@@ -44,10 +51,13 @@ module.exports = {
   async deleteClient(req, res) {
     try {
       const { client_id } = req.params;
+      const { id: user_id } = req.user;
 
-      const client = await Client.destroy({ where: { id: client_id } });
-
-      res.json(client);
+      const deletedClient = await Client.destroy({ where: { id: client_id, user_id } });
+      if (deletedClient === 0) {
+        res.status(404).send('No clients found!');
+      }
+      res.json(deletedClient);
     }
     catch (error) {
       return res.status(500).send(error);

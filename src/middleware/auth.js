@@ -18,6 +18,10 @@ const auth = async (req, res, next) => {
     next();
   }
   catch (error) {
+    if (error.message === 'jwt expired') {
+      const token = req.header('Authorization').replace('Bearer ', '');
+      await Token.destroy({ where: { token } });
+    }
     res.status(401).send({ error: 'Please, authenticate!' });
   }
 };

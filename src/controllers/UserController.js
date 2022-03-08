@@ -122,4 +122,15 @@ module.exports = {
       res.status(500).send(error);
     }
   },
+
+  async logoutAllUser(req, res) {
+    try {
+      const token = req.token;
+      await Token.destroy({ where: { user_id: token.user_id } });
+      res.status(200).send();
+    }
+    catch (error) {
+      res.status(500).send(error);
+    }
+  },
 };

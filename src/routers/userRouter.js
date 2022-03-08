@@ -9,5 +9,6 @@ router.get('/users', auth, UserController.getProfile);
 router.patch('/users', auth, UserController.updateUser);
 router.delete('/users', auth, UserController.deleteUser);
 router.post('/users/logout', auth, UserController.logoutUser);
+router.post('/users/logoutall', auth, UserController.logoutAllUser);
 
 module.exports = router;

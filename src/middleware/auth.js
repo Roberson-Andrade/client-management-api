@@ -13,6 +13,7 @@ const auth = async (req, res, next) => {
     }
 
     const user = await User.findByPk(decoded.id);
+    req.token = dbToken;
     req.user = user;
     next();
   }

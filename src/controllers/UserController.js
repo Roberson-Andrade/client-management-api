@@ -1,3 +1,4 @@
+const Token = require('../models/Token');
 const User = require('../models/User');
 
 module.exports = {
@@ -105,6 +106,17 @@ module.exports = {
       const deletedUser = await User.destroy({ where: { id: user.id } });
 
       res.status(200).json(deletedUser);
+    }
+    catch (error) {
+      res.status(500).send(error);
+    }
+  },
+
+  async logoutUser(req, res) {
+    try {
+      const token = req.token;
+      await Token.destroy({ where: { id: token.id } });
+      res.status(200).send();
     }
     catch (error) {
       res.status(500).send(error);

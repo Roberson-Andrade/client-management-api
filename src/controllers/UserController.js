@@ -9,8 +9,22 @@ module.exports = {
         return res.status(400).send({ error: 'This email is already being used!' });
       }
 
-      const user = await User.create(req.body);
-      res.status(201).send(user);
+      const {
+        user,
+        user_name,
+        user_avatar,
+        user_email: email,
+        createdAt,
+      } = await User.create(req.body);
+
+      const token = user.generateToken();
+      res.status(201).send({
+        user_name,
+        email,
+        user_avatar,
+        createdAt,
+        token,
+      });
     }
     catch (error) {
       res.status(500).send(error);
@@ -32,8 +46,42 @@ module.exports = {
         return res.status(400).send({ error: 'Email or password is invalid' });
       }
 
-      user.generateToken();
-      res.send(user);
+      const {
+        user_name,
+        user_avatar,
+        user_email: email,
+        createdAt,
+      } = user;
+
+      const token = await user.generateToken();
+      res.send({
+        user_name,
+        email,
+        user_avatar,
+        createdAt,
+        token,
+      });
+    }
+    catch (error) {
+      res.status(500).send(error);
+    }
+  },
+
+  async getProfile(req, res) {
+    try {
+      const {
+        user_name,
+        user_avatar,
+        user_email: email,
+        createdAt,
+      } = req.user;
+
+      res.send({
+        user_name,
+        email,
+        user_avatar,
+        createdAt,
+      });
     }
     catch (error) {
       res.status(500).send(error);
@@ -42,9 +90,9 @@ module.exports = {
 
   async updateUser(req, res) {
     try {
-      const { user_id } = req.params;
-      const user = await User.update(req.body, { where: { id: user_id } });
-      res.send(user);
+      const user = req.user;
+      const updatedUser = await User.update(req.body, { where: { id: user.id } });
+      res.send(updatedUser);
     }
     catch (error) {
       res.status(500).send(error);
@@ -53,10 +101,10 @@ module.exports = {
 
   async deleteUser(req, res) {
     try {
-      const { user_id } = req.params;
-      const user = await User.destroy({ where: { id: user_id } });
+      const user = req.user;
+      const deletedUser = await User.destroy({ where: { id: user.id } });
 
-      res.status(200).json(user);
+      res.status(200).json(deletedUser);
     }
     catch (error) {
       res.status(500).send(error);

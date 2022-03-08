@@ -45,9 +45,10 @@ class User extends Model {
   }
 
   async generateToken() {
-    const token = jwt.sign({ id: this.dataValues.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({ id: this.dataValues.id }, process.env.JWT_SECRET, { expiresIn: '1 day' });
 
-    await Token.create({ user_id: this.dataValues.id, token });
+    Token.create({ user_id: this.dataValues.id, token });
+    console.log(token);
     return token;
   }
 }

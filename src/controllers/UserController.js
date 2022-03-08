@@ -10,15 +10,16 @@ module.exports = {
         return res.status(400).send({ error: 'This email is already being used!' });
       }
 
+      const user = await User.create(req.body);
+
       const {
-        user,
         user_name,
         user_avatar,
         user_email: email,
         createdAt,
-      } = await User.create(req.body);
+      } = user;
 
-      const token = user.generateToken();
+      const token = await user.generateToken();
       res.status(201).send({
         user_name,
         email,

@@ -6,6 +6,7 @@ module.exports = {
       return Promise.all([
         queryInterface.addColumn('clients', 'user_id', {
           type: Sequelize.INTEGER,
+          allowNull: false,
           references: { model: 'users', key: 'id' },
         }, { transaction: t }),
       ]);

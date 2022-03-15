@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const config = require('../config/database');
 
-const dbConfig = config.development.host ? config.development : config.production;
+const dbConfig = process.env.NODE_ENV === 'production' ? config.production : config.development;
 
 const connection = new Sequelize(dbConfig);
 

@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize');
-const dbConfig = require('../config/database');
+const config = require('../config/database');
+
+const dbConfig = config.development.host ? config.development : config.production;
 
 const connection = new Sequelize(dbConfig);
 

@@ -13,7 +13,7 @@ The project is CRUD application to manage simple projects of clients you may hav
   - Deadline;
   - If the project is completed;
 
-### :wrench: Build with
+### :wrench: Built with
 - Node.js;
 - Express;
 - PostgreSQL;

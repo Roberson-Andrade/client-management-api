@@ -41,6 +41,10 @@ module.exports = {
         return res.status(404).json({ error: 'The client doesn\'t exist.' });
       }
 
+      if (client.projects.length === 0) {
+        return res.status(404).json({ error: 'No projects found!' });
+      }
+
       res.json(client.projects);
     }
     catch (error) {

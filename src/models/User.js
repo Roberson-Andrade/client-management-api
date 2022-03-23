@@ -32,6 +32,9 @@ class User extends Model {
           user.user_password = hashedPassword;
         },
         async beforeUpdate(user) {
+          if (user.getDataValue('user_password') === user.previous('user_password')) {
+            return;
+          }
           const hashedPassword = await bcrypt.hash(user.user_password, 8);
           user.user_password = hashedPassword;
         },

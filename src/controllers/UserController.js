@@ -4,10 +4,10 @@ const User = require('../models/User');
 module.exports = {
   async createUser(req, res) {
     try {
-      const { user_email } = req.body;
-      const existentEmail = await User.findOne({ where: { user_email } });
+      const { user_email: email } = req.body;
+      const existentEmail = await User.findOne({ where: { user_email: email } });
       if (existentEmail) {
-        return res.status(400).send({ error: 'This email is already being used!' });
+        return res.status(400).json({ error: 'This email is already being used!' });
       }
 
       const user = await User.create(req.body);
@@ -15,57 +15,57 @@ module.exports = {
       const {
         user_name,
         user_avatar,
-        user_email: email,
+        user_email,
         createdAt,
       } = user;
 
       const token = await user.generateToken();
-      res.status(201).send({
+      res.status(201).json({
         user_name,
-        email,
+        user_email,
         user_avatar,
         createdAt,
         token,
       });
     }
     catch (error) {
-      res.status(500).send(error);
+      res.status(500).json(error);
     }
   },
 
   async loginUser(req, res) {
     try {
-      const { user_email, user_password } = req.body;
-      const user = await User.findOne({ where: { user_email } });
+      const { user_email: email, user_password } = req.body;
+      const user = await User.findOne({ where: { user_email: email } });
 
       if (!user) {
-        return res.status(400).send({ error: 'Email or password is invalid' });
+        return res.status(400).json({ error: 'Email or password is invalid' });
       }
 
       const isPasswordValid = await User.validatePassword(user_password, user.user_password);
 
       if (!isPasswordValid) {
-        return res.status(400).send({ error: 'Email or password is invalid' });
+        return res.status(400).json({ error: 'Email or password is invalid' });
       }
 
       const {
         user_name,
         user_avatar,
-        user_email: email,
+        user_email,
         createdAt,
       } = user;
 
       const token = await user.generateToken();
-      res.send({
+      res.json({
         user_name,
-        email,
+        user_email,
         user_avatar,
         createdAt,
         token,
       });
     }
     catch (error) {
-      res.status(500).send(error);
+      res.status(500).json(error);
     }
   },
 
@@ -74,42 +74,51 @@ module.exports = {
       const {
         user_name,
         user_avatar,
-        user_email: email,
+        user_email,
         createdAt,
       } = req.user;
 
-      res.send({
+      res.json({
         user_name,
-        email,
+        user_email,
         user_avatar,
         createdAt,
       });
     }
     catch (error) {
-      res.status(500).send(error);
+      res.status(500).json(error);
     }
   },
 
   async updateUser(req, res) {
     try {
       const user = req.user;
-      const updatedUser = await User.update(req.body, { where: { id: user.id } });
-      res.send(updatedUser);
+      const updatedUser = await User.update(req.body, { where: { id: user.id }, individualHooks: true });
+      const {
+        user_name,
+        user_avatar,
+        user_email,
+      } = updatedUser[1][0];
+      res.json({
+        user_name,
+        user_avatar,
+        user_email,
+      });
     }
     catch (error) {
-      res.status(500).send(error);
+      res.status(500).json(error);
     }
   },
 
   async deleteUser(req, res) {
     try {
       const user = req.user;
-      const deletedUser = await User.destroy({ where: { id: user.id } });
+      await User.destroy({ where: { id: user.id } });
 
-      res.status(200).json(deletedUser);
+      res.status(204).end();
     }
     catch (error) {
-      res.status(500).send(error);
+      res.status(500).json(error);
     }
   },
 
@@ -117,10 +126,10 @@ module.exports = {
     try {
       const token = req.token;
       await Token.destroy({ where: { id: token.id } });
-      res.status(200).send();
+      res.status(204).end();
     }
     catch (error) {
-      res.status(500).send(error);
+      res.status(500).json(error);
     }
   },
 
@@ -128,10 +137,10 @@ module.exports = {
     try {
       const token = req.token;
       await Token.destroy({ where: { user_id: token.user_id } });
-      res.status(200).send();
+      res.status(200).end();
     }
     catch (error) {
-      res.status(500).send(error);
+      res.status(500).json(error);
     }
   },
 };

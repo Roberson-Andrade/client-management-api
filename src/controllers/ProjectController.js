@@ -10,7 +10,7 @@ module.exports = {
       const client = await Client.findOne({ where: { id: client_id, user_id: req.user.id } });
 
       if (!client) {
-        return res.status(404).send({ error: 'Client not found!' });
+        return res.status(404).json({ error: 'Client not found!' });
       }
 
       const project = await Project.create({
@@ -25,7 +25,7 @@ module.exports = {
 
     }
     catch (error) {
-      res.status(500).send(error);
+      res.status(500).json(error);
     }
   },
 
@@ -37,13 +37,13 @@ module.exports = {
       });
 
       if (!client || client.user_id !== req.user.id) {
-        return res.status(404).send({ error: 'The client doesn\'t exist.' });
+        return res.status(404).json({ error: 'The client doesn\'t exist.' });
       }
 
-      res.send(client.projects);
+      res.json(client.projects);
     }
     catch (error) {
-      res.status(500).send(error);
+      res.status(500).json(error);
     }
   },
 
@@ -53,7 +53,7 @@ module.exports = {
       const client = await Client.findOne({ where: { id: client_id, user_id: req.user.id } });
 
       if (!client) {
-        return res.status(404).send({ error: 'Client not found!' });
+        return res.status(404).json({ error: 'Client not found!' });
       }
 
       const project = await Project.update(req.body, {
@@ -61,13 +61,13 @@ module.exports = {
       });
 
       if (!project[0]) {
-        return res.status(404).send({ error: 'Project not found!' });
+        return res.status(404).json({ error: 'Project not found!' });
       }
 
       res.json(project);
     }
     catch (error) {
-      return res.status(500).send(error);
+      return res.status(500).json(error);
     }
   },
 
@@ -78,19 +78,19 @@ module.exports = {
       const client = await Client.findOne({ where: { id: client_id, user_id: req.user.id } });
 
       if (!client) {
-        return res.status(404).send({ error: 'Client not found!' });
+        return res.status(404).json({ error: 'Client not found!' });
       }
 
       const project = await Project.destroy({ where: { id: project_id, client_id } });
 
       if (!project) {
-        return res.status(404).send({ error: 'Project not found! ' });
+        return res.status(404).json({ error: 'Project not found! ' });
       }
 
-      res.json(project);
+      res.status(204).end();
     }
     catch (error) {
-      return res.status(500).send(error);
+      return res.status(500).json(error);
     }
   },
 };

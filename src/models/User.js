@@ -55,7 +55,6 @@ class User extends Model {
     const token = jwt.sign({ id: this.dataValues.id }, process.env.JWT_SECRET, { expiresIn: '1 day' });
 
     Token.create({ user_id: this.dataValues.id, token });
-    console.log(token);
     return token;
   }
 }

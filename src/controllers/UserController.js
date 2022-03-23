@@ -1,5 +1,6 @@
 const Token = require('../models/Token');
 const User = require('../models/User');
+const allowFields = require('../utils/allowFields');
 
 module.exports = {
   async createUser(req, res) {
@@ -93,6 +94,12 @@ module.exports = {
   async updateUser(req, res) {
     try {
       const user = req.user;
+      const allowedFields = ['user_name', 'user_email', 'user_password'];
+      const isFieldAllowed = allowFields(allowedFields, req.body);
+
+      if (!isFieldAllowed) {
+        return res.status(400).json({ error: 'Insert a valid field!' });
+      }
       const updatedUser = await User.update(req.body, { where: { id: user.id }, individualHooks: true });
       const {
         user_name,

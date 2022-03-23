@@ -1,5 +1,6 @@
 const Project = require('../models/Project');
 const Client = require('../models/Client');
+const allowFields = require('../utils/allowFields');
 
 module.exports = {
   async createProject(req, res) {
@@ -54,6 +55,12 @@ module.exports = {
 
       if (!client) {
         return res.status(404).json({ error: 'Client not found!' });
+      }
+      const allowedFields = ['title', 'description', 'value', 'deadline', 'completed'];
+      const isFieldAllowed = allowFields(allowedFields, req.body);
+
+      if (!isFieldAllowed) {
+        return res.status(400).json({ error: 'Insert a valid field!' });
       }
 
       const project = await Project.update(req.body, {

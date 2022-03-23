@@ -1,4 +1,5 @@
 const Client = require('../models/Client');
+const allowFields = require('../utils/allowFields');
 
 module.exports = {
   async createClient(req, res) {
@@ -35,6 +36,14 @@ module.exports = {
     try {
       const { client_id } = req.params;
       const { id: user_id } = req.user;
+
+      const allowedFields = ['full_name', 'client_email'];
+      const isFieldAllowed = allowFields(allowedFields, req.body);
+
+      if (!isFieldAllowed) {
+        return res.status(400).json({ error: 'Insert a valid field!' });
+      }
+
       const client = await Client.update(req.body, { where: { id: client_id, user_id } });
 
       if (!client[0]) {
